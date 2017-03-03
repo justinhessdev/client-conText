@@ -2,6 +2,7 @@ import React from "react";
 
 import MessageList from "./MessageList"
 import MessageForm from "./MessageForm"
+import CtxForm from "./CtxForm"
 
 export default class Dashboard extends React.Component {
   constructor() {
@@ -19,8 +20,9 @@ export default class Dashboard extends React.Component {
         <div id="dashboard">
            <div className="row">
                <div className="col-xs-9">
-                <MessageList messages={this.state.messages} />
-                <MessageForm onSubmit={this.createMessage} messages={this.state.messages} />
+                 <MessageList messages={this.state.messages} currentUser={this.state.currentUser} />
+                 <MessageForm onSubmit={this.createMessage} messages={this.state.messages} currentConversation={this.state.currentConversation} currentUser={this.state.currentUser} sendTo={this.state.to}/>
+                 <CtxForm onSubmit={this.createMessage} messages={this.state.messages} currentConversation={this.state.currentConversation} currentUser={this.state.currentUser} sendTo={this.state.to}/>
               </div>
           </div>
         </div>
