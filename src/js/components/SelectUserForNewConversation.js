@@ -1,16 +1,16 @@
 import React from "react";
 
-export default class SelectUserForNewConversation extends React.component{
+export default class SelectUserForNewConversation extends React.Component{
 
   constructor() {
     super()
   }
-  
+
   loadEmptyConversation(currentUser, user2){
 
     var self = this
 
-    const startConversation = fetch('/conversations', {
+    const startConversation = fetch('https://shielded-dusk-72399.herokuapp.com/conversations', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

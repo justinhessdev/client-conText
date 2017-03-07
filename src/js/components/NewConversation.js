@@ -7,13 +7,15 @@ export default class NewConversation extends React.Component {
 
   startNewConversation() {
     $('#conversations-list').hide()
-    const sendSearch = fetch('/users', {credentials: 'same-origin'})
+    const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/usersV2', {
+      credentials: 'same-origin'
+    })
     var self = this
 
     function loadMyUsers(data) {
+      console.log(data);
       data.json().then((jsonData) => {
-        // console.log(jsonData)
-        self.props.showUsersForNewConversation(jsonData)
+        console.log(jsonData)
 
       })
     }

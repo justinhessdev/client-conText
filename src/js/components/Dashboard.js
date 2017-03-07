@@ -4,7 +4,7 @@ import MessageList from "./MessageList"
 import MessageForm from "./MessageForm"
 import CtxForm from "./CtxForm"
 import NewConversation from "./NewConversation"
-// import ConversationList from "./ConversationList"
+import ConversationList from "./ConversationList"
 import SelectUserForNewConversation from "./SelectUserForNewConversation"
 
 export default class Dashboard extends React.Component {
@@ -116,7 +116,7 @@ export default class Dashboard extends React.Component {
          <div className="row">
              <div className="col-xs-3">
                <NewConversation showUsersForNewConversation={this.showUsersForNewConversation}/>
-              //  <ConversationList conversations={this.state.conversations} getDataFromConversation={this.getDataFromConversation} currentConversation={this.setCurrentConversation} currentUser={this.state.currentUser} sendTo={this.state.to} startConvoWith={this.state.startedConversationWith}/>
+               <ConversationList conversations={this.state.conversations} getDataFromConversation={this.getDataFromConversation} currentConversation={this.setCurrentConversation} currentUser={this.state.currentUser} sendTo={this.state.to} startConvoWith={this.state.startedConversationWith}/>
                <SelectUserForNewConversation users={this.state.users} currentUser={this.state.currentUser} addConversation={this.updateConversationList} startConvoWith={this.startConvoWith}/>
            </div>
              <div className="col-xs-9">
