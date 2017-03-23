@@ -61,7 +61,6 @@ export default class SelectUserForNewConversation extends React.Component{
         color: 'white'
       }
 
-      if(u._id != this.props.currentUser){
         return (
           <div onClick={() => this.loadEmptyConversation(this.props.currentUser, u)} key={u._id}>
             <div className="row">
@@ -76,7 +75,6 @@ export default class SelectUserForNewConversation extends React.Component{
             </div>
         </div>
         )
-      }
     })
 
     const divStyle = {

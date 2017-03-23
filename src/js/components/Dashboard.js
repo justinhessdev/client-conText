@@ -1,5 +1,6 @@
 import React from "react";
 
+import NavBar from "./NavBar"
 import MessageList from "./MessageList"
 import MessageForm from "./MessageForm"
 import CtxForm from "./CtxForm"
@@ -106,6 +107,24 @@ export default class Dashboard extends React.Component {
     })
   }
 
+  componentWillMount() {
+
+    var self = this
+
+    const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/usersV2', {credentials: 'same-origin'})
+
+    function loadMyUsers(data) {
+      data.json().then((jsonData) => {
+        console.log("The users are: ")
+        console.log(jsonData)
+        self.showUsersForNewConversation(jsonData)
+
+      })
+    }
+
+    sendSearch.then(loadMyUsers)
+  }
+
   render() {
     const divStyle = {
       float: "left"
@@ -113,11 +132,12 @@ export default class Dashboard extends React.Component {
 
     return (
       <div id="dashboard">
+
          <div className="row">
              <div className="col-xs-3">
                <NewConversation showUsersForNewConversation={this.showUsersForNewConversation}/>
                <ConversationList conversations={this.state.conversations} getDataFromConversation={this.getDataFromConversation} currentConversation={this.setCurrentConversation} currentUser={this.state.currentUser} sendTo={this.state.to} startConvoWith={this.state.startedConversationWith}/>
-               <SelectUserForNewConversation users={this.state.users} currentUser={this.state.currentUser} addConversation={this.updateConversationList} startConvoWith={this.startConvoWith}/>
+               <SelectUserForNewConversation users={this.state.users} addConversation={this.updateConversationList} startConvoWith={this.startConvoWith}/>
            </div>
              <div className="col-xs-9">
               <MessageList messages={this.state.messages} currentUser={this.state.currentUser} />
