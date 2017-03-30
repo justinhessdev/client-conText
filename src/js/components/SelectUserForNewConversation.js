@@ -6,41 +6,6 @@ export default class SelectUserForNewConversation extends React.Component{
     super()
   }
 
-  loadEmptyConversation(currentUser, user2){
-
-    var self = this
-
-    const startConversation = fetch('https://shielded-dusk-72399.herokuapp.com/conversations', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-         user1: currentUser,
-         user2: user2._id,
-         messages: []
-      })
-    })
-
-    function beginConversation(data) {
-
-      self.props.startConvoWith(user2)
-      data.json().then((jsonData) => {
-        // console.log("The new conversation is: ")
-        // console.log(jsonData)
-        self.props.addConversation(jsonData.conversation)
-
-        $('#conversations-list').show()
-        $('#users-list').hide()
-
-
-      })
-    }
-
-    startConversation.then(beginConversation)
-  }
-
   render() {
 
     const users = this.props.users.map((u) => {
@@ -61,13 +26,13 @@ export default class SelectUserForNewConversation extends React.Component{
         color: 'white'
       }
 
+      if(u.local.name=="Joe") {
         return (
-          <div onClick={() => this.loadEmptyConversation(this.props.currentUser, u)} key={u._id}>
+          <div key={u._id}>
             <div className="row">
               <hr style={pStyle}></hr>
               <div className="col-xs-3 col-xs-offset-2">
                 <button style={bStyle} type="button" className="btn btn-default pull-right" aria-label="Left Align">
-                  <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </button></div>
               <div style={dStyle} className="col-xs-6">
                 <p className="">{u.local.name}</p>
@@ -75,6 +40,7 @@ export default class SelectUserForNewConversation extends React.Component{
             </div>
         </div>
         )
+      }
     })
 
     const divStyle = {

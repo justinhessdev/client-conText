@@ -3,37 +3,23 @@ import React from "react";
 import NavBar from "./NavBar"
 import MessageList from "./MessageList"
 import MessageForm from "./MessageForm"
-import CtxForm from "./CtxForm"
 import NewConversation from "./NewConversation"
-import ConversationList from "./ConversationList"
 import SelectUserForNewConversation from "./SelectUserForNewConversation"
 
 export default class Dashboard extends React.Component {
   constructor() {
     super()
     this.state = {
-        isLoggedIn: true,
-        messages: [
-          {id: 1, user_id: "58a39219fc4c98025a646ff1", body: "Hey there", context: false, urgent: false, customContext:""},
-          {id: 2, user_id: "58a39219fc4c98025a646ff1", body: "How are you?", context: false, urgent: false, customContext:""},
-          {id: 3, user_id: "58a3a774c8a707068b15dd1c", body: "I'm great! Thanks for asking", context: false, urgent: false, customContext:""},
-          {id: 4, user_id: "58a39219fc4c98025a646ff1", body: "😍", context: false, urgent: false, customContext:""}
-        ],
-        users: [],
-        conversations: [],
-        currentConversation: [],
-        startedConversationWith: {},
-        currentUser: "",
-        to: ""}
+      messages: [],
+      users: [],
+    }
   }
 
   createMessage(id, body, context, urgent, customContext) {
-
     this.setState({
-      isLoggedIn: false,
       messages: [
         ...this.state.messages,
-        {id: id, user_id: this.state.currentUser, body: body, context: context, urgent: urgent, customContext: customContext}
+        {id: id, user_id: "58a743735adab10011e223d9", body: body, context: context, urgent: urgent, customContext: customContext}
       ]
     })
   }
@@ -47,26 +33,8 @@ export default class Dashboard extends React.Component {
 
     this.setState({
       messages: newMessages,
-      to: user2._id
     })
 
-  }
-
-  showConversationListInfo(data) {
-    var conversationData = []
-    data.map((d) => {
-      conversationData.push({id: d._id, user1: d.user1, user2: d.user2})
-    })
-
-    this.setState({
-      conversations: conversationData
-    })
-  }
-
-  setCurrentConversation(conversation) {
-    this.setState({
-      currentConversation: conversation
-    })
   }
 
   showUsersForNewConversation(users) {
@@ -81,45 +49,29 @@ export default class Dashboard extends React.Component {
     })
   }
 
-  updateConversationList(conversation) {
-    // console.log("I am adding the new converstaion to state conversations: ")
-    // console.log(conversation)
-    var updateConvoArr = []
-    this.state.conversations.map((c) => {
-      updateConvoArr.push(c)
-    })
-
-
-    updateConvoArr.push({id:conversation._id, user1: conversation.user1, user2: conversation.user2})
-
-    this.setState({
-      conversations: updateConvoArr
-    })
-
-    // console.log("There should be a new conversation now: ")
-    // console.log("Array size is now: " + this.state.conversations.length)
-    // console.log(this.state.conversations)
-  }
-
-  startConvoWith(user) {
-    this.setState({
-      startedConversationWith: user
-    })
-  }
-
   componentWillMount() {
-
     var self = this
-
     const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/usersV2', {credentials: 'same-origin'})
+
+    function getConvo() {
+      const theConversation = fetch('https://shielded-dusk-72399.herokuapp.com/conversations/58b78a67f6fede00110dd21e', {credentials: 'same-origin'})
+      theConversation.then(loadConvo)
+    }
+
+    function loadConvo(data) {
+      data.json().then((jsonData) => {
+        console.log("The conversation is: ")
+        console.log(jsonData)
+        self.getDataFromConversation(jsonData.user1, jsonData.user2, jsonData.messages)
+      })
+    }
 
     function loadMyUsers(data) {
       data.json().then((jsonData) => {
         console.log("The users are: ")
         console.log(jsonData)
         self.showUsersForNewConversation(jsonData)
-
-      })
+      }).then(getConvo)
     }
 
     sendSearch.then(loadMyUsers)
@@ -132,21 +84,17 @@ export default class Dashboard extends React.Component {
 
     return (
       <div id="dashboard">
-
          <div className="row">
              <div className="col-xs-3">
-               <NewConversation showUsersForNewConversation={this.showUsersForNewConversation}/>
-               <ConversationList conversations={this.state.conversations} getDataFromConversation={this.getDataFromConversation} currentConversation={this.setCurrentConversation} currentUser={this.state.currentUser} sendTo={this.state.to} startConvoWith={this.state.startedConversationWith}/>
-               <SelectUserForNewConversation users={this.state.users} addConversation={this.updateConversationList} startConvoWith={this.startConvoWith}/>
+               <NewConversation />
+               <SelectUserForNewConversation users={this.state.users} />
            </div>
              <div className="col-xs-9">
-              <MessageList messages={this.state.messages} currentUser={this.state.currentUser} />
-              <MessageForm onSubmit={this.createMessage} messages={this.state.messages} currentConversation={this.state.currentConversation} currentUser={this.state.currentUser} sendTo={this.state.to}/>
-              <CtxForm onSubmit={this.createMessage} messages={this.state.messages} currentConversation={this.state.currentConversation} currentUser={this.state.currentUser} sendTo={this.state.to}/>
+              <MessageList messages={this.state.messages} />
+              <MessageForm onSubmit={this.createMessage.bind(this)} messages={this.state.messages} />
             </div>
         </div>
       </div>
-      )
-
+    )
   }
 }

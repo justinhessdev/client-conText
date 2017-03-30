@@ -3,8 +3,21 @@ import React from "react"
 export default class CtxForm extends React.Component {
   constructor() {
     super()
-    this.state = { }
+    this.state = {
+      urgentClickCount: 0,
+      isUrgent: false,
+      value: 'blank'
+    }
   }
+
+    // handel when user clicks close.. hide context form and show original input form
+    handleClose() {
+      this.setState({isUrgent: false, value: 'blank'})
+      this.refs.ctxMessage.value = ''
+      $('#ctx-form').hide()
+      $('#ctxBorder').removeClass('red')
+      $('#message-form').show()
+    }
 
   render() {
     return (

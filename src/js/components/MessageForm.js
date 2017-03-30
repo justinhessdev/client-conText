@@ -1,24 +1,25 @@
 import React from "react"
 
 export default class MessageForm extends React.Component {
+
     handleSubmit(evt) {
       evt.preventDefault()
 
-      const sendSearch = fetch('/messages', {
+      var self = this
+      var id
+
+      const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/messages', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          _author: this.props.currentUser,
-           to: this.props.sendTo,
-           body: this.refs.newMessage.value
+          _author: "58a743735adab10011e223d9",
+           to: "58b774a20a62350011f83cb3",
+           body: self.refs.newMessage.value
         })
       })
-
-      var self = this
-      var id
 
       function loadMyMessage(data) {
         data.json().then((jsonData) => {
@@ -40,15 +41,15 @@ export default class MessageForm extends React.Component {
         // console.log(ids)
         // console.log("In message form - the current conversation is: ")
         // console.log(self.props.currentConversation)
-        const patchSearch = fetch('/conversations/'+self.props.currentConversation.id, {
+        const patchSearch = fetch('https://shielded-dusk-72399.herokuapp.com/conversations/58b78a67f6fede00110dd21e', {
           method: 'PATCH',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-             user1: self.props.currentConversation.user1._id,
-             user2: self.props.currentConversation.user2._id,
+             user1: "58a743735adab10011e223d9",
+             user2: "58b774a20a62350011f83cb3",
              messages: ids
           })
         })
@@ -61,9 +62,9 @@ export default class MessageForm extends React.Component {
     }
 
     showContextModal() {
-       $('#ctx-form').show()
-       $('#message-form').hide()
-       this.refs.newMessage.value = ''
+      //  $('#ctx-form').show()
+      //  $('#message-form').hide()
+       this.refs.newMessage.value = "conText "+this.refs.newMessage.value
     }
 
   render() {
@@ -75,9 +76,9 @@ export default class MessageForm extends React.Component {
               <label className="sr-only" htmlFor="ex3">send message</label>
               <div className="input-group">
                 <input className="form-control" id="ex3" type='text' ref='newMessage' placeholder="send message - press enter"/>
-                <div className="input-group-addon" onClick={this.showContextModal}>conTEXT</div>
+                <div className="input-group-addon" onClick={this.showContextModal.bind(this)}>conTEXT</div>
               </div>
-            <button className="btn btn-primary sr-only" onClick={this.handleSubmit}>Submit</button>
+            <button className="btn btn-primary sr-only" onClick={this.handleSubmit.bind(this)}>Submit</button>
         </form>
       </div>
     )
