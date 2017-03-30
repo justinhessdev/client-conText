@@ -3,6 +3,7 @@ import React from "react";
 import NavBar from "./NavBar"
 import MessageList from "./MessageList"
 import MessageForm from "./MessageForm"
+import CtxForm from "./CtxForm"
 import NewConversation from "./NewConversation"
 import SelectUserForNewConversation from "./SelectUserForNewConversation"
 
@@ -84,15 +85,16 @@ export default class Dashboard extends React.Component {
 
     return (
       <div id="dashboard">
-         <div className="row">
-             <div className="col-xs-3">
-               <NewConversation />
-               <SelectUserForNewConversation users={this.state.users} />
-           </div>
-             <div className="col-xs-9">
-              <MessageList messages={this.state.messages} />
-              <MessageForm onSubmit={this.createMessage.bind(this)} messages={this.state.messages} />
-            </div>
+        <div className="row">
+          <div className="col-xs-3">
+             <NewConversation />
+             <SelectUserForNewConversation users={this.state.users} />
+          </div>
+          <div className="col-xs-9">
+            <MessageList messages={this.state.messages} />
+            <MessageForm onSubmit={this.createMessage.bind(this)} messages={this.state.messages} />
+            <CtxForm onSubmit={this.createMessage.bind(this)} messages={this.state.messages} />
+          </div>
         </div>
       </div>
     )

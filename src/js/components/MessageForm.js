@@ -57,14 +57,12 @@ export default class MessageForm extends React.Component {
 
       // patchSearch.then(loadPatch)
       sendSearch.then(loadMyMessage)
-
-
     }
 
     showContextModal() {
-      //  $('#ctx-form').show()
-      //  $('#message-form').hide()
-       this.refs.newMessage.value = "conText "+this.refs.newMessage.value
+       $('#ctx-form').show()
+       $('#message-form').hide()
+       this.refs.newMessage.value = ''
     }
 
   render() {

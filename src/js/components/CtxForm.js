@@ -10,14 +10,94 @@ export default class CtxForm extends React.Component {
     }
   }
 
-    // handel when user clicks close.. hide context form and show original input form
-    handleClose() {
-      this.setState({isUrgent: false, value: 'blank'})
-      this.refs.ctxMessage.value = ''
-      $('#ctx-form').hide()
-      $('#ctxBorder').removeClass('red')
-      $('#message-form').show()
+  // handel when user clicks close.. hide context form and show original input form
+  handleClose() {
+    this.setState({isUrgent: false, value: 'blank'})
+    this.refs.ctxMessage.value = ''
+    $('#ctx-form').hide()
+    $('#ctxBorder').removeClass('red')
+    $('#message-form').show()
+  }
+
+  handleSubmit(evt) {
+    var cc = $("#ctxSelect option:selected").text()
+    evt.preventDefault()
+
+    var self = this
+    var id
+
+    const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/messages', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        _author: '58a743735adab10011e223d9',
+         to: '58b774a20a62350011f83cb3',
+         body: self.refs.ctxMessage.value,
+         context: true,
+         urgent: self.state.isUrgent,
+         customContext: cc
+      })
+    })
+
+    function loadMyMessage(data) {
+      data.json().then((jsonData) => {
+        // console.log("The message we received from server is: ")
+        // console.log(jsonData)
+        id = jsonData._id
+        // console.log(id);
+        var customctx = $("#ctxSelect option:selected").text()
+        self.props.onSubmit(id, self.refs.ctxMessage.value, true, self.state.isUrgent, customctx)
+        self.refs.ctxMessage.value = ''
+        self.setState({isUrgent: false, value: 'blank'})
+        $('#ctxBorder').removeClass('red')
+        $('#ctx-form').hide()
+        $('#message-form').show()
+      }).then(patchConversation)
     }
+
+    function patchConversation() {
+      var ids = []
+      self.props.messages.map((message) => {
+        // console.log(message)
+         ids.push(message.id)
+      })
+
+      // console.log(ids)
+      // console.log("In message form - the current conversation is: ")
+      // console.log(self.props.currentConversation)
+      const patchSearch = fetch('https://shielded-dusk-72399.herokuapp.com/conversations/58b78a67f6fede00110dd21e', {
+        method: 'PATCH',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+           user1: '58a743735adab10011e223d9',
+           user2: '58b774a20a62350011f83cb3',
+           messages: ids
+        })
+      })
+    }
+
+    // patchSearch.then(loadPatch)
+    sendSearch.then(loadMyMessage)
+  }
+
+  // change state of select options
+  handleChange(event) {
+    this.setState({value: event.target.value})
+  }
+
+  handleUrgent() {
+    $('#ctxBorder').toggleClass('red')
+    this.setState({
+      urgentClickCount: this.state.urgentClickCount+1,
+      isUrgent: !this.state.isUrgent
+    })
+  }
 
   render() {
     return (
@@ -29,7 +109,7 @@ export default class CtxForm extends React.Component {
                   <textarea className="form-control"  id="ctx-area" ref='ctxMessage' rows="2"></textarea>
                   <br></br>
                   <label htmlFor="ctxSelect">Send custom context</label>
-                  <select id="ctxSelect" value={this.state.value} onChange={this.handleChange}>
+                  <select id="ctxSelect" value={this.state.value} onChange={this.handleChange.bind(this)}>
                     <option value="blank" ></option>
                     <option value="thinking">Thinking of you</option>
                     <option value="love">Love you</option>
@@ -44,9 +124,9 @@ export default class CtxForm extends React.Component {
                   </select>
                   <br></br>
                   <label htmlFor="urgent">Make it urgent</label>
-                  <button id="urgentButton" type="button" className="btn btn-default" onClick={this.handleUrgent}>Urgent</button>
-                  <button id="sendContextButton" type="button" className="btn btn-primary pull-right" onClick={this.handleSubmit}>Send</button>
-                  <button type="button" className="btn btn-default pull-right" onClick={this.handleClose}>Close</button>
+                  <button id="urgentButton" type="button" className="btn btn-default" onClick={this.handleUrgent.bind(this)}>Urgent</button>
+                  <button id="sendContextButton" type="button" className="btn btn-primary pull-right" onClick={this.handleSubmit.bind(this)}>Send</button>
+                  <button type="button" className="btn btn-default pull-right" onClick={this.handleClose.bind(this)}>Close</button>
                 </div>
 
         </div>
