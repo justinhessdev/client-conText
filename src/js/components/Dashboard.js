@@ -1,6 +1,5 @@
 import React from "react";
 
-import NavBar from "./NavBar"
 import MessageList from "./MessageList"
 import MessageForm from "./MessageForm"
 import CtxForm from "./CtxForm"

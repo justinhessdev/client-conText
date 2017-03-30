@@ -55,7 +55,9 @@ export default class MessageList extends React.Component {
     const divStyle = {
       border: "1px solid black",
       marginTop: '5px',
-      padding: '10px'
+      padding: '10px',
+      height: '400px',
+      overflowY: 'scroll'
     }
 
     return (
