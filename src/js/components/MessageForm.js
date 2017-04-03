@@ -7,6 +7,7 @@ export default class MessageForm extends React.Component {
 
       var self = this
       var id
+      var obj
 
       const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/messages', {
         method: 'POST',
@@ -26,7 +27,8 @@ export default class MessageForm extends React.Component {
           // console.log(jsonData);
           id = jsonData._id
           // console.log(id);
-          self.props.onSubmit(id, self.refs.newMessage.value, false, false, "")
+          obj = {id:id, body:self.refs.newMessage.value, context:false, urgent:false, customContext:""}
+          // self.props.onSubmit(id, self.refs.newMessage.value, false, false, "")
           self.refs.newMessage.value = ''
         }).then(patchConversation)
       }
@@ -37,6 +39,8 @@ export default class MessageForm extends React.Component {
           // console.log(message)
            ids.push(message.id)
         })
+
+        ids.push(obj.id)
 
         // console.log(ids)
         // console.log("In message form - the current conversation is: ")
@@ -52,7 +56,15 @@ export default class MessageForm extends React.Component {
              user2: "58b774a20a62350011f83cb3",
              messages: ids
           })
-        })
+        }).then(emitConversation)
+      }
+
+      function emitConversation() {
+        console.log("obj is: ")
+        console.log(obj)
+        console.log("in MessageForm.js - socket is: ");
+        console.log(socket);
+        socket.emit('send-message-from-jj-to-joe', obj);
       }
 
       // patchSearch.then(loadPatch)
