@@ -25,6 +25,7 @@ export default class CtxForm extends React.Component {
 
     var self = this
     var id
+    var obj
 
     const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/messages', {
       method: 'POST',
@@ -49,7 +50,10 @@ export default class CtxForm extends React.Component {
         id = jsonData._id
         // console.log(id);
         var customctx = $("#ctxSelect option:selected").text()
-        self.props.onSubmit(id, self.refs.ctxMessage.value, true, self.state.isUrgent, customctx)
+        obj = {id:id, body:self.refs.ctxMessage.value, context:true, urgent:self.state.isUrgent, customContext:customctx}
+        console.log("Logging urgency: ")
+        console.log(obj.urgent)
+        // self.props.onSubmit(id, self.refs.ctxMessage.value, true, self.state.isUrgent, customctx)
         self.refs.ctxMessage.value = ''
         self.setState({isUrgent: false, value: 'blank'})
         $('#ctxBorder').removeClass('red')
@@ -65,6 +69,8 @@ export default class CtxForm extends React.Component {
          ids.push(message.id)
       })
 
+      ids.push(obj.id)
+
       // console.log(ids)
       // console.log("In message form - the current conversation is: ")
       // console.log(self.props.currentConversation)
@@ -79,7 +85,15 @@ export default class CtxForm extends React.Component {
            user2: '58b774a20a62350011f83cb3',
            messages: ids
         })
-      })
+      }).then(emitConversation)
+    }
+
+    function emitConversation() {
+      console.log("obj is: ")
+      console.log(obj)
+      console.log("in CtxForm.js - socket is: ");
+      console.log(socket);
+      socket.emit('send-message-from-jj-to-joe', obj);
     }
 
     // patchSearch.then(loadPatch)
@@ -97,12 +111,14 @@ export default class CtxForm extends React.Component {
       urgentClickCount: this.state.urgentClickCount+1,
       isUrgent: !this.state.isUrgent
     })
+    console.log("urgent state is: ");
+    console.log(this.state.isUrgent);
   }
 
   render() {
     return (
       <div id='ctx-form'>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit.bind(this)}>
               <div className="form-group">
                 <div id="ctxBorder">
                   <label htmlFor="ctx-area">What do you want to talk about?</label>
