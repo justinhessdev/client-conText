@@ -89,7 +89,7 @@ export default class Dashboard extends React.Component {
     const sendSearch = fetch('https://shielded-dusk-72399.herokuapp.com/usersV2', {credentials: 'same-origin'})
 
     function getConvo() {
-      const theConversation = fetch('https://shielded-dusk-72399.herokuapp.com/conversations/58b78a67f6fede00110dd21e', {credentials: 'same-origin'})
+      const theConversation = fetch('https://shielded-dusk-72399.herokuapp.com/conversations/58e6e3723c21030011fe4c6c', {credentials: 'same-origin'})
       theConversation.then(loadConvo)
     }
 

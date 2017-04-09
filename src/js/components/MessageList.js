@@ -57,7 +57,7 @@ export default class MessageList extends React.Component {
       marginTop: '5px',
       padding: '10px',
       height: '400px',
-      overflowY: 'scroll'
+      overflow: 'auto'
     }
 
     return (
@@ -69,4 +69,13 @@ export default class MessageList extends React.Component {
 
     )
   }
+
+  // componentDidMount() {
+  //   var out = document.getElementById("message-list")
+  //   setInterval(function() {
+  //       out.scrollTop = out.scrollHeight
+  //       console.log(out.scrollTop, out.scrollHeight)
+  //       console.log(out.scrollHeight)
+  //     }, 1000)
+  // }
 }
